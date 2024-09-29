@@ -37,7 +37,7 @@ public class Helper {
         LIGHT_PINK(255, 153, 204);
 
         public static GamepadColour[] AllColours = new GamepadColour[]{
-            RED, GREEN, BLUE, BLACK, WHITE, CYAN, PURPLE, YELLOW, ORANGE, PINK
+            RED, GREEN, BLUE, CYAN, PURPLE, YELLOW, ORANGE, PINK
         };
 
         private final int red;
@@ -132,13 +132,13 @@ public class Helper {
         return new boolean[] {gp.a, gp.b, gp.x, gp.y};
     }
 
-    private final int PrimaryColours = 10;
+    private static int PrimaryColours = 8;
 
     public static int RainbowLeds(Gamepad gamepad, int iter) {
         if(iter % 2 != 0) {
             return ++iter;
         }
-        if(iter > 20) {
+        if(iter > (PrimaryColours * 2)) {
             iter = 0;
         }
         GamepadColour col = GamepadColour.AllColours[iter / 2];
