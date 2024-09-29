@@ -13,7 +13,7 @@ public class Helper {
      */
     public enum GamepadColour {
         RED(255, 0, 0),
-        GREEN(0, 255, 0),
+        GREEN(-1, 255, 0),
         BLUE(0, 0, 255),
         BLACK(0, 0, 0),
         WHITE(255, 255, 255),
@@ -36,6 +36,9 @@ public class Helper {
         LILAC(153, 153, 255),
         LIGHT_PINK(255, 153, 204);
 
+        public static GamepadColour[] AllColours = new GamepadColour[]{
+            RED, GREEN, BLUE, BLACK, WHITE, CYAN, PURPLE, YELLOW, ORANGE, PINK
+        };
 
         private final int red;
         private final int green;
@@ -52,6 +55,7 @@ public class Helper {
             this.green = g;
             this.blue = b;
         }
+
     }
 
     /**
@@ -114,6 +118,11 @@ public class Helper {
         gp.setLedColor(col.red, col.green, col.blue, Gamepad.LED_DURATION_CONTINUOUS);
     }
 
+    public static void SetGamepadLight(Gamepad gp, GamepadColour col, boolean rumble) {
+        if(rumble) gp.rumble(200);
+        gp.setLedColor(col.red, col.green, col.blue, Gamepad.LED_DURATION_CONTINUOUS);
+    }
+
     /**
      * Gets all of the RHS buttons from the gamepad in order of ABXY
      * @param gp The gamepad to get the state from
@@ -122,4 +131,19 @@ public class Helper {
     public static boolean[] CopyButtonsFromGamepad(Gamepad gp) {
         return new boolean[] {gp.a, gp.b, gp.x, gp.y};
     }
+
+    private final int PrimaryColours = 10;
+
+    public static int RainbowLeds(Gamepad gamepad, int iter) {
+        if(iter % 2 != 0) {
+            return ++iter;
+        }
+        if(iter > 20) {
+            iter = 0;
+        }
+        GamepadColour col = GamepadColour.AllColours[iter / 2];
+        SetGamepadLight(gamepad, col, false);
+        return ++iter;
+    }
+
 }

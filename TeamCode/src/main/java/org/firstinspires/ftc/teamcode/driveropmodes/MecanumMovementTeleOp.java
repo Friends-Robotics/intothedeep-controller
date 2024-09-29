@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.driveropmodes;
 
+import static org.firstinspires.ftc.teamcode.Helper.RainbowLeds;
 import static org.firstinspires.ftc.teamcode.Helper.ReportAllMotorSpeed;
 import static org.firstinspires.ftc.teamcode.Helper.ReportDriveMotorStatus;
 
@@ -17,6 +18,8 @@ public class MecanumMovementTeleOp extends LinearOpMode {
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
+
+        int iteration_counter = 0;
 
         // Create hardware map
         DeepHardwareMap teamHardwareMap = new DeepHardwareMap(hardwareMap);
@@ -42,6 +45,8 @@ public class MecanumMovementTeleOp extends LinearOpMode {
             // Give gamepad to mecanum to move wheels
             m.Move(gamepad1);
             ReportAllMotorSpeed(teamHardwareMap, telemetry);
+
+            iteration_counter = RainbowLeds(gamepad1, iteration_counter);
         }
     }
 }
