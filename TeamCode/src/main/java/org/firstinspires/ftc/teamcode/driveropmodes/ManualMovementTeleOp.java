@@ -91,7 +91,7 @@ public class ManualMovementTeleOp extends LinearOpMode {
      * @param dir Direction to change based on
      */
     private void ConfigureGamepadLight(int dir) {
-        SetGamepadLight(gamepad1, dir == 1 ? GamepadColour.GREEN : GamepadColour.BLUE);
+        SetGamepadLight(gamepad1, dir == 1 ? GamepadColour.BLUE : GamepadColour.RED);
     }
 
     private void SetupGamepads(Gamepad prev_gp, Gamepad current_gp) {
