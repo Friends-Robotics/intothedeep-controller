@@ -99,6 +99,11 @@ public class Helper {
         telemetry.update();
     }
 
+    public static void ReportCurrentMotorDirection(Telemetry telemetry, int direction) {
+        telemetry.addData("Current motor direction", direction == 1 ? "Forward" : "Backward");
+    }
+
+
     /**
      * Sets light on gamepad and rumbles
      * @param gp Gamepad to modify colour

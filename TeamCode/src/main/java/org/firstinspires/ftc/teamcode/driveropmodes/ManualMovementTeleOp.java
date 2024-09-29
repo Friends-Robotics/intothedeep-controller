@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.driveropmodes;
 import static org.firstinspires.ftc.teamcode.Helper.CopyButtonsFromGamepad;
 import static org.firstinspires.ftc.teamcode.Helper.GamepadColour;
 import static org.firstinspires.ftc.teamcode.Helper.ReportAllMotorSpeed;
+import static org.firstinspires.ftc.teamcode.Helper.ReportCurrentMotorDirection;
 import static org.firstinspires.ftc.teamcode.Helper.ReportDriveMotorStatus;
 import static org.firstinspires.ftc.teamcode.Helper.SetGamepadLight;
 
@@ -31,6 +32,10 @@ public class ManualMovementTeleOp extends LinearOpMode {
     // | Left Bumper  | Change Wheel Direction |
     // -----------------------------------------
 
+    // MUST be between 0 and 1 ( incl )
+    public final int PowerMultiplier = 1;
+
+    boolean[] prev_buttons, curr_buttons;
 
     @Override
     public void runOpMode() {
@@ -40,16 +45,18 @@ public class ManualMovementTeleOp extends LinearOpMode {
         DeepHardwareMap deepHardwareMap = new DeepHardwareMap(hardwareMap);
 
         // Gamepads to use for rising edge detector
-        Gamepad current_gp = new Gamepad();
+        Gamepad curr_gp = new Gamepad();
         Gamepad prev_gp = new Gamepad();
 
-        DcMotorSimple[] motors = new DcMotorSimple[] {deepHardwareMap.FrontRightMotor, deepHardwareMap.FrontLeftMotor, deepHardwareMap.BackRightMotor, deepHardwareMap.BackLeftMotor};
-        boolean[] prev_buttons, curr_buttons;
+        DcMotorSimple[] motors = new DcMotorSimple[] {
+                deepHardwareMap.FrontRightMotor,
+                deepHardwareMap.FrontLeftMotor,
+                deepHardwareMap.BackRightMotor,
+                deepHardwareMap.BackLeftMotor
+        };
 
-        // Some variables needed
-        int motor_index;
+        // Direction of motor
         int dir = 1;
-        boolean all_motors_active;
 
         // Make sure all motors are behaving properly
         ReportDriveMotorStatus(deepHardwareMap, telemetry);
@@ -59,61 +66,53 @@ public class ManualMovementTeleOp extends LinearOpMode {
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
-            // Set up both gamepads
-            // prev_gp has state of last loop
-            prev_gp.copy(current_gp);
-            prev_buttons = CopyButtonsFromGamepad(prev_gp);
-
-            current_gp.copy(gamepad1);
-            curr_buttons = CopyButtonsFromGamepad(current_gp);
+            SetupGamepads(prev_gp, curr_gp);
 
             // If pressing left bump for first time then change dir
-            if(current_gp.left_bumper && !prev_gp.left_bumper) {
-                // Change Direction
-                dir *= -1;
-                SetGamepadLight(gamepad1, dir == 1 ? GamepadColour.GREEN : GamepadColour.BLUE);
-                telemetry.addData("Current motor direction", dir == 1 ? "Forward" : "Backward");
+            if(curr_gp.left_bumper && !prev_gp.left_bumper) {
+                ConfigureGamepadLight(dir *= -1);
+                ReportCurrentMotorDirection(telemetry, dir);
             }
 
-            // Needs to be final for .forEach  /  WHY ??
-            int final_dir = dir;
-
-
-            // If pressing bumper set motor power to right state
-            all_motors_active = gamepad1.right_bumper;
-
-            // If released bumper set motor power to 0
-            if(prev_gp.right_bumper && !current_gp.right_bumper) all_motors_active = false;
-
-            if(all_motors_active) {
-                // Set all motors to right setting
-                Arrays.stream(motors)
-                        .forEach(x -> x.setPower(final_dir));
-                continue;
+            if(curr_gp.right_bumper) {
+                AllMotorsPower(motors, dir * PowerMultiplier);
             }
-
-
-            // Assume no buttons are being pressed
-            motor_index = -1;
 
             for(int i = 0; i < motors.length; i++) {
-                // If right button is pressed then activate it
-                if(curr_buttons[i]) motor_index = i;
-                // If released button then deactivate it
-                if(prev_buttons[i] && !curr_buttons[0]) {
-                    motors[i].setPower(0);
-                }
-            }
-
-            // If motor is selected then move motor in proper direction
-            if(motor_index != -1) {
-                // Selection has to be final for some reason
-                int sel = motor_index;
-                IntStream.range(0, motors.length)
-                        .forEach(x -> motors[x].setPower(x == sel ? final_dir : 0));
+                SetMotorPowerIfButton(motors[i], prev_buttons[i], curr_buttons[i], dir * PowerMultiplier);
             }
 
             ReportAllMotorSpeed(deepHardwareMap, telemetry);
+        }
+    }
+
+    /**
+     * Set gamepad light to appropriate lighting
+     * @param dir Direction to change based on
+     */
+    private void ConfigureGamepadLight(int dir) {
+        SetGamepadLight(gamepad1, dir == 1 ? GamepadColour.GREEN : GamepadColour.BLUE);
+    }
+
+    private void SetupGamepads(Gamepad prev_gp, Gamepad current_gp) {
+        prev_gp.copy(current_gp);
+        prev_buttons = CopyButtonsFromGamepad(prev_gp);
+
+        current_gp.copy(gamepad1);
+        curr_buttons = CopyButtonsFromGamepad(current_gp);
+    }
+
+    private void AllMotorsPower(DcMotorSimple[] motors, int power) {
+        Arrays.stream(motors)
+                .forEach(x -> x.setPower(power));
+    }
+
+    private void SetMotorPowerIfButton(DcMotorSimple motor, boolean previous_button, boolean current_button, int direction) {
+        if(current_button) {
+            motor.setPower(direction);
+        }
+        if(previous_button && !current_button) {
+            motor.setPower(0);
         }
     }
 }
