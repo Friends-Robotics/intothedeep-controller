@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import static org.firstinspires.ftc.teamcode.Helper.*;
 
 /**
  Class designed to provide helper methods to operate mecanum wheels
@@ -41,12 +42,8 @@ public class Mecanum {
      */
     public void Move(Gamepad gp) {
         // If invalid power multiplier range is provided then just set value to 1
-        if(!(PowerMultiplier > 0 && PowerMultiplier <= 1)) {
-            if(telemetry != null) {
-                telemetry.addLine("Power Multiplier should be between 0 and 1");
-                telemetry.addLine("Power Multiplier defaulting to 1");
-                telemetry.update();
-            }
+        if(PowerMultiplier < 0 || PowerMultiplier > 1) {
+            ReportIfTelemetry(telemetry, "Power Multiplier should be between 0 and 1", "Power Multiplier defaulting to 1");
             PowerMultiplier = 1;
         }
 

@@ -87,6 +87,19 @@ public class Helper {
     }
 
     /**
+     * Will add all strings passed to telemetry if it is not null
+     * @param telemetry Telemtry object to be passed
+     * @param args List of Strings to be logged
+     */
+    public static void ReportIfTelemetry(Telemetry telemetry, String... args) {
+        if(telemetry == null) return;
+        for(String arg: args) {
+            telemetry.addLine(arg);
+        }
+        telemetry.update();
+    }
+
+    /**
      * Sets light on gamepad and rumbles
      * @param gp Gamepad to modify colour
      * @param col Colour to change gamepad to
