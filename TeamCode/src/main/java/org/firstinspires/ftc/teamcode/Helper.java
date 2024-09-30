@@ -12,37 +12,37 @@ public class Helper {
      * Enum for storing a colour's state
      */
     public enum GamepadColour {
-        RED(255, 0, 0),
-        GREEN(0, 255, 0),
-        BLUE(0, 0, 255),
+        RED(1, 0, 0),
+        GREEN(0, 1, 0),
+        BLUE(0, 0, 1),
         BLACK(0, 0, 0),
-        WHITE(255, 255, 255),
-        CYAN(0, 255, 255),
-        PURPLE(127, 0, 255),
-        YELLOW(255, 255, 0),
-        ORANGE(255, 128, 0),
-        PINK(255, 0, 127),
+        WHITE(1, 1, 1),
+        CYAN(0, 1, 1),
+        PURPLE(0.5, 0, 1),
+        YELLOW(1, 1, 0),
+        ORANGE(1, 0.5, 0),
+        PINK(1, 0, 0.5),
 
-        DARK_RED(102, 0, 0),
-        DARK_YELLOW(102, 102, 0),
-        DARK_GREEN(0, 102, 0),
-        DARK_BLUE(0, 0, 102),
-        DARK_CYAN(0, 102, 102),
+        DARK_RED(0.4, 0, 0),
+        DARK_YELLOW(0.4, 0.4, 0),
+        DARK_GREEN(0, 0.4, 0),
+        DARK_BLUE(0, 0, 0.4),
+        DARK_CYAN(0, 0.4, 0.4),
 
-        LIGHT_RED(255, 153, 153),
-        LIGHT_YELLOW(255, 255, 153),
-        LIGHT_GREEN(153, 255, 153),
-        LIGHT_CYAN(153, 255, 255),
-        LILAC(153, 153, 255),
-        LIGHT_PINK(255, 153, 204);
+        LIGHT_RED(1, 0.6, 0.6),
+        LIGHT_YELLOW(1, 1, 0.6),
+        LIGHT_GREEN(0.6, 1, 0.6),
+        LIGHT_CYAN(0.6, 1, 1),
+        LILAC(0.6, 0.6, 1),
+        LIGHT_PINK(1, 0.6, 0.8);
 
         public static GamepadColour[] AllColours = new GamepadColour[]{
             RED, GREEN, BLUE, CYAN, PURPLE, YELLOW, ORANGE, PINK
         };
 
-        private final int red;
-        private final int green;
-        private final int blue;
+        private final float red;
+        private final float green;
+        private final float blue;
 
         /**
          * Set up colour
@@ -50,7 +50,7 @@ public class Helper {
          * @param g Green Value
          * @param b Blue Value
          */
-        GamepadColour(int r, int g, int b) {
+        GamepadColour(float r, float g, float b) {
             this.red = r;
             this.green = g;
             this.blue = b;
