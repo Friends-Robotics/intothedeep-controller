@@ -18,23 +18,23 @@ public class Helper {
         BLACK(0, 0, 0),
         WHITE(1, 1, 1),
         CYAN(0, 1, 1),
-        PURPLE(0.5, 0, 1),
+        PURPLE(0.5f, 0, 1),
         YELLOW(1, 1, 0),
-        ORANGE(1, 0.5, 0),
-        PINK(1, 0, 0.5),
+        ORANGE(1, 0.5f, 0),
+        PINK(1, 0, 0.5f),
 
-        DARK_RED(0.4, 0, 0),
-        DARK_YELLOW(0.4, 0.4, 0),
-        DARK_GREEN(0, 0.4, 0),
-        DARK_BLUE(0, 0, 0.4),
-        DARK_CYAN(0, 0.4, 0.4),
+        DARK_RED(0.4f, 0, 0),
+        DARK_YELLOW(0.4f, 0.4f, 0),
+        DARK_GREEN(0, 0.4f, 0),
+        DARK_BLUE(0, 0, 0.4f),
+        DARK_CYAN(0, 0.4, 0.4f),
 
-        LIGHT_RED(1, 0.6, 0.6),
-        LIGHT_YELLOW(1, 1, 0.6),
-        LIGHT_GREEN(0.6, 1, 0.6),
-        LIGHT_CYAN(0.6, 1, 1),
-        LILAC(0.6, 0.6, 1),
-        LIGHT_PINK(1, 0.6, 0.8);
+        LIGHT_RED(1, 0.6f, 0.6f),
+        LIGHT_YELLOW(1, 1, 0.6f),
+        LIGHT_GREEN(0.6f, 1, 0.6f),
+        LIGHT_CYAN(0.6f, 1, 1),
+        LILAC(0.6f, 0.6f, 1),
+        LIGHT_PINK(1, 0.6f, 0.8f);
 
         public static GamepadColour[] AllColours = new GamepadColour[]{
             RED, GREEN, BLUE, CYAN, PURPLE, YELLOW, ORANGE, PINK
