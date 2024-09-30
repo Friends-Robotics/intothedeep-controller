@@ -146,4 +146,44 @@ public class Helper {
         return ++iter;
     }
 
+    public static Color generateRainbowColor(int t) {
+        // Normalize t to fit within 0-360 range
+        int normalizedT = t % 360;
+        
+        // Calculate hue (0-360)
+        double hue = normalizedT / 60.0;
+        
+        // Choose fixed saturation and value
+        int saturation = 100;
+        int value = 100;
+        
+        // Convert to RGB
+        int[] rgb = hsvToRgb(hue, saturation, value);
+        
+        // Return Color object
+        return new Color(rgb[0], rgb[1], rgb[2]);
+    }
+
+    private static int[] hsvToRgb(double hue, int saturation, int value) {
+        hue /= 360.0;
+        int hi = (int) Math.floor(hue * 6);
+        hue -= hi;
+        double f = hue * 6.0;
+        
+        int i = (int) f;
+        double v1 = value * (1 - saturation);
+        double v2 = value * (1 - hue * saturation);
+        double v3 = value * (1 - (1 - hue) * saturation);
+        
+        switch(i % 6){
+            case 0: return new int[]{value, v3, v1};
+            case 1: return new int[]{v2, value, v1};
+            case 2: return new int[]{v1, value, v3};
+            case 3: return new int[]{v1, v3, value};
+            case 4: return new int[]{value, v2, v3};
+            case 5: return new int[]{v3, v1, value};
+        }
+        throw new RuntimeException("Invalid hue index");
+    }
+
 }
