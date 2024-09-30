@@ -37,6 +37,9 @@ public class MecanumMovementTeleOp extends LinearOpMode {
         ReportDriveMotorStatus(teamHardwareMap, telemetry);
 
         telemetry.update();
+
+        generateRainbowColor(); 
+
         waitForStart();
 
         if (isStopRequested()) return;
