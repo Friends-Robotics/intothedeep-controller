@@ -123,6 +123,11 @@ public class Helper {
         gp.setLedColor(col.red, col.green, col.blue, Gamepad.LED_DURATION_CONTINUOUS);
     }
 
+    public static void SetGamepadLight(Gamepad gamepad, float red, float green, float blue, boolean rumble) {
+        if(rumble) gp.rumble(200);
+        gp.setLedColor(red, green, blue);
+    }
+
     /**
      * Gets all of the RHS buttons from the gamepad in order of ABXY
      * @param gp The gamepad to get the state from
@@ -132,18 +137,9 @@ public class Helper {
         return new boolean[] {gp.a, gp.b, gp.x, gp.y};
     }
 
-    private static int PrimaryColours = 8;
-
-    public static int RainbowLeds(Gamepad gamepad, int iter) {
-        if(iter % 2 != 0) {
-            return ++iter;
-        }
-        if(iter > (PrimaryColours * 2)) {
-            iter = 0;
-        }
-        GamepadColour col = GamepadColour.AllColours[iter / 2];
-        SetGamepadLight(gamepad, col, false);
-        return ++iter;
+    public static void RainbowLeds(Gamepad gamepad, int iter) {
+        Color col = generateRainbowColor(iter);
+        SetGamepadLight(gamepad, Col.r, Col.g, Col.b);
     }
 
     public static Color generateRainbowColor(int t) {
