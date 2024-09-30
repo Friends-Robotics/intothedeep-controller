@@ -137,49 +137,25 @@ public class Helper {
         return new boolean[] {gp.a, gp.b, gp.x, gp.y};
     }
 
-    public static void RainbowLeds(Gamepad gamepad, int iter) {
-        Color col = generateRainbowColor(iter);
-        SetGamepadLight(gamepad, Col.r, Col.g, Col.b);
+    public static void RainbowLeds(Gamepad gamepad, int i) {    
+        SetGamepadLight(gamepad, rainbows[i][0], rainbows[i][1], rainbows[i][2], false);
     }
 
-    public static Color generateRainbowColor(int t) {
-        // Normalize t to fit within 0-360 range
-        int normalizedT = t % 360;
-        
-        // Calculate hue (0-360)
-        double hue = normalizedT / 60.0;
-        
-        // Choose fixed saturation and value
-        int saturation = 100;
-        int value = 100;
-        
-        // Convert to RGB
-        int[] rgb = hsvToRgb(hue, saturation, value);
-        
-        // Return Color object
-        return new Color(rgb[0], rgb[1], rgb[2]);
-    }
+    public static double[][] rainbows;
 
-    private static int[] hsvToRgb(double hue, int saturation, int value) {
-        hue /= 360.0;
-        int hi = (int) Math.floor(hue * 6);
-        hue -= hi;
-        double f = hue * 6.0;
-        
-        int i = (int) f;
-        double v1 = value * (1 - saturation);
-        double v2 = value * (1 - hue * saturation);
-        double v3 = value * (1 - (1 - hue) * saturation);
-        
-        switch(i % 6){
-            case 0: return new int[]{value, v3, v1};
-            case 1: return new int[]{v2, value, v1};
-            case 2: return new int[]{v1, value, v3};
-            case 3: return new int[]{v1, v3, value};
-            case 4: return new int[]{value, v2, v3};
-            case 5: return new int[]{v3, v1, value};
+    public static void generateRainbowColor() {
+        // do this once
+        final int ARRAY_SIZE = 100;
+        double jump = 360.0 / (ARRAY_SIZE*1.0);
+        int[] colors = new int[ARRAY_SIZE];
+        for (int i = 0; i < colors.length; i++) {
+            colors[i] = Color.HSVToColor(new float[]{(float) (jump*i), 1.0f, 1.0f});
         }
-        throw new RuntimeException("Invalid hue index");
-    }
+        double[][] vals = new double [ARRAY_SIZE][3];
+        for(int i = 0; i < colors.length; i++) { 
+            vals[i] = new double[]{ (float) colors[i].red / 255, (float) colors[i].green / 255, (float)colors[i].blue / 255};
+        }
 
+        rainbows = vals;
+    }
 }
