@@ -137,8 +137,13 @@ public class Helper {
         return new boolean[] {gp.a, gp.b, gp.x, gp.y};
     }
 
-    public static void RainbowLeds(Gamepad gamepad, int i) {    
+    public static int RainbowLeds(Gamepad gamepad, int i) {    
+        if(i >= rainbows.length) {
+            i = 0;
+        }
         SetGamepadLight(gamepad, rainbows[i][0], rainbows[i][1], rainbows[i][2], false);
+        i++;
+        return i;
     }
 
     public static double[][] rainbows;
