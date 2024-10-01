@@ -51,8 +51,6 @@ public class MecanumMovementTeleOp extends LinearOpMode {
             ReportAllMotorSpeed(teamHardwareMap, telemetry);
 
             iteration_counter = RainbowLeds(gamepad1, iteration_counter);
-            
-
         }
     }
 }
