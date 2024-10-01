@@ -50,8 +50,8 @@ public class MecanumMovementTeleOp extends LinearOpMode {
             m.Move(gamepad1);
             ReportAllMotorSpeed(teamHardwareMap, telemetry);
 
-            RainbowLeds(gamepad1, iteration_counter);
-            iteration_counter++;
+            iteration_counter = RainbowLeds(gamepad1, iteration_counter);
+            
 
         }
     }
