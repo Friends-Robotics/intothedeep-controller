@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
+
 import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.hardwaremaps.DeepHardwareMap;
@@ -27,7 +29,7 @@ public class Helper {
         DARK_YELLOW(0.4f, 0.4f, 0),
         DARK_GREEN(0, 0.4f, 0),
         DARK_BLUE(0, 0, 0.4f),
-        DARK_CYAN(0, 0.4, 0.4f),
+        DARK_CYAN(0, 0.4f, 0.4f),
 
         LIGHT_RED(1, 0.6f, 0.6f),
         LIGHT_YELLOW(1, 1, 0.6f),
@@ -124,8 +126,8 @@ public class Helper {
     }
 
     public static void SetGamepadLight(Gamepad gamepad, float red, float green, float blue, boolean rumble) {
-        if(rumble) gp.rumble(200);
-        gp.setLedColor(red, green, blue);
+        if(rumble) gamepad.rumble(200);
+        gamepad.setLedColor((double)red, (double)green, (double)blue, Gamepad.LED_DURATION_CONTINUOUS);
     }
 
     /**
@@ -146,21 +148,5 @@ public class Helper {
         return i;
     }
 
-    public static double[][] rainbows;
-
-    public static void generateRainbowColor() {
-        // do this once
-        final int ARRAY_SIZE = 100;
-        double jump = 360.0 / (ARRAY_SIZE*1.0);
-        int[] colors = new int[ARRAY_SIZE];
-        for (int i = 0; i < colors.length; i++) {
-            colors[i] = Color.HSVToColor(new float[]{(float) (jump*i), 1.0f, 1.0f});
-        }
-        double[][] vals = new double [ARRAY_SIZE][3];
-        for(int i = 0; i < colors.length; i++) { 
-            vals[i] = new double[]{ (float) colors[i].red / 255, (float) colors[i].green / 255, (float)colors[i].blue / 255};
-        }
-
-        rainbows = vals;
-    }
+    public static float[][] rainbows;
 }

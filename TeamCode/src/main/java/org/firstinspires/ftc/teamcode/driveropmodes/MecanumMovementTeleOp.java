@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Mecanum;
 import static org.firstinspires.ftc.teamcode.Helper.*;
+
+import org.firstinspires.ftc.teamcode.MotorState;
 import org.firstinspires.ftc.teamcode.hardwaremaps.DeepHardwareMap;
 
 /**
@@ -31,26 +33,30 @@ public class MecanumMovementTeleOp extends LinearOpMode {
                 teamHardwareMap.FrontLeftMotor,
                 teamHardwareMap.BackRightMotor,
                 teamHardwareMap.BackLeftMotor,
-                0.5
+                1
                 );
 
         // Make sure all motors are behaving properly
         ReportDriveMotorStatus(teamHardwareMap, telemetry);
 
-        telemetry.update();
+        MotorState prev_ms, curr_ms;
+        curr_ms = new MotorState(teamHardwareMap);
 
-        generateRainbowColor(); 
+        m.correctState = curr_ms;
+        m.telemetry = telemetry;
+
+        telemetry.update();
 
         waitForStart();
 
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
+            prev_ms = curr_ms.copy();
+            curr_ms.update(teamHardwareMap);
             // Give gamepad to mecanum to move wheels
-            m.Move(gamepad1);
+            m.Move(gamepad1, prev_ms, curr_ms);
             ReportAllMotorSpeed(teamHardwareMap, telemetry);
-
-            iteration_counter = RainbowLeds(gamepad1, iteration_counter);
         }
     }
 }

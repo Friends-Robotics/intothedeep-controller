@@ -31,14 +31,14 @@ public class DeepHardwareMap {
 
     // Setup and configure all drive motors
     public DcMotorSimple FrontRightMotor;
-    public DcMotorSimple FrontLeftMotor = ConfigureMovementMotor("FLW", DcMotorSimple.Direction.REVERSE);
-    public DcMotorSimple BackRightMotor = ConfigureMovementMotor("BRW", DcMotorSimple.Direction.REVERSE);
-    public DcMotorSimple BackLeftMotor = ConfigureMovementMotor("BLW", DcMotorSimple.Direction.REVERSE);
+    public DcMotorSimple FrontLeftMotor;
+    public DcMotorSimple BackRightMotor;
+    public DcMotorSimple BackLeftMotor;
 
     // Setup and configure all odometers
-    // public DcMotorEx RightOdometerMotor = ConfigureOdometerMotor("RIGHT_ODOMETER");
-    // public DcMotorEx LeftOdometerMotor = ConfigureOdometerMotor("LEFT_ODOMETER");
-    // public DcMotorEx CentreOdometerMotor = ConfigureOdometerMotor("CENTRE_ODOMETER");
+    // public DcMotorEx RightOdometerMotor;
+    // public DcMotorEx LeftOdometerMotor;
+    // public DcMotorEx CentreOdometerMotor;
 
     public DeepHardwareMap(HardwareMap hardwaremap) {
         hardwareMap = hardwaremap;
@@ -46,17 +46,18 @@ public class DeepHardwareMap {
     }
 
     public void initialise() {
-        FrontRightMotor = ConfigureMovementMotor(FrontRightMotor, "FRW", DcMotorSimple.Direction.REVERSE);
-FrontLeftMotor = ConfigureMovementMotor(FrontLeftMotor, "FLW", DcMotorSimple.Direction.REVERSE);
-BackRightMotor = ConfigureMovementMotor(BackRightMotor, "BRW", DcMotorSimple.Direction.REVERSE);
-BackLeftMotor = ConfigureMovementMotor(BackLeftMotor, "BLW", DcMotorSimple.Direction.REVERSE);
+        FrontRightMotor = ConfigureMovementMotor(FrontRightMotor, "FRW");
+        FrontLeftMotor = ConfigureMovementMotor(FrontLeftMotor, "FLW");
+        BackRightMotor = ConfigureMovementMotor(BackRightMotor, "BRW");
+        BackLeftMotor = ConfigureMovementMotor(BackLeftMotor, "BLW");
+
         // Any additional configuration options here
-        FrontLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        BackRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
-    private DcMotorSimple ConfigureMovementMotor(DcMotorSimple motor , String name, DcMotorSimple.Direction dir) {
+    private DcMotorSimple ConfigureMovementMotor(DcMotorSimple motor , String name) {
         motor = hardwareMap.get(DcMotorSimple.class, name);
-        motor.setDirection(dir);
+        motor.setDirection(DcMotorSimple.Direction.REVERSE);
         return motor;
     }
 
