@@ -73,60 +73,12 @@ public class Mecanum {
             rx = Math.max(gp.left_trigger + 0.4, 1);
         }
 
-        // Denominator is the largest motor power (absolute value) or 1
-        // This ensures all the powers maintain the same ratio,
-        // but only if at least one is out of the range [-1, 1]
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
+
         double frontRightPower = (y - x - rx) / denominator;
         double frontLeftPower = (y + x + rx) / denominator;
         double backRightPower = (y + x - rx) / denominator;
         double backLeftPower = (y - x + rx) / denominator;
-
-        if (!prev.IsFrontRightZero() && curr.IsFrontRightZero()) {
-            if (correctStateCount[0] == 0) {
-                correctStateCount[0] = CORRECTSTATELEN;
-                correctState.frontRight = -1 * prev.frontRight;
-            }
-            correctStateCount[0]--;
-            frontRightPower = correctState.frontRight;
-        }
-
-        if (!prev.IsFrontLeftZero() && curr.IsFrontLeftZero()){
-            if (correctStateCount[1] == 0) {
-                correctStateCount[1] = CORRECTSTATELEN;
-                correctState.frontLeft = -1 * prev.frontLeft;
-            }
-            correctStateCount[1]--;
-            frontLeftPower = correctState.frontLeft;
-        }
-
-        if(!prev.IsBackRightZero() && curr.IsBackRightZero()) {
-            if (correctStateCount[2] == 0) {
-                correctStateCount[2] = CORRECTSTATELEN;
-                correctState.backRight = -1 * prev.backRight;
-            }
-            correctStateCount[2]--;
-            backRightPower = correctState.backRight;
-        }
-
-        if(!prev.IsBackLeftZero() && curr.IsBackLeftZero()) {
-            if (correctStateCount[3] == 0) {
-                correctStateCount[3] = CORRECTSTATELEN;
-                correctState.backLeft = -1 * prev.backLeft;
-            }
-            correctStateCount[3]--;
-            backLeftPower = correctState.backLeft;
-        }
-
-        if(correctStateCount[0] == 0) correctState.frontRight = -2;
-        if(correctStateCount[1] == 0) correctState.frontLeft = -2;
-        if(correctStateCount[2] == 0) correctState.backRight = -2;
-        if(correctStateCount[3] == 0) correctState.backLeft = -2;
-
-        // frontRightMotor.setPower(correctState.frontRight != -2 ? correctState.frontRight : frontRightPower * PowerMultiplier);
-        // frontLeftMotor.setPower(correctState.frontLeft != -2 ? correctState.frontLeft : frontLeftPower * PowerMultiplier);
-        // backRightMotor.setPower(correctState.backRight != -2 ? correctState.backRight : backRightPower * PowerMultiplier);
-        // backLeftMotor.setPower(correctState.backLeft != -2 ? correctState.backLeft : backLeftPower * PowerMultiplier);
 
         frontRightMotor.setPower(frontRightPower * PowerMultiplier);
         frontLeftMotor.setPower(frontLeftPower * PowerMultiplier);

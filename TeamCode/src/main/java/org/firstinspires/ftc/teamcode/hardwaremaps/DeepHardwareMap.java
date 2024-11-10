@@ -29,13 +29,11 @@ public class DeepHardwareMap {
 
     private final HardwareMap hardwareMap;
 
-    // Setup and configure all drive motors
     public DcMotorSimple FrontRightMotor;
     public DcMotorSimple FrontLeftMotor;
     public DcMotorSimple BackRightMotor;
     public DcMotorSimple BackLeftMotor;
 
-    // Setup and configure all odometers
     // public DcMotorEx RightOdometerMotor;
     // public DcMotorEx LeftOdometerMotor;
     // public DcMotorEx CentreOdometerMotor;
@@ -51,7 +49,6 @@ public class DeepHardwareMap {
         BackRightMotor = ConfigureMovementMotor(BackRightMotor, "BRW");
         BackLeftMotor = ConfigureMovementMotor(BackLeftMotor, "BLW");
 
-        // Any additional configuration options here
         BackRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 

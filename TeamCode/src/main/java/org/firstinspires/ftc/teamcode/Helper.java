@@ -105,10 +105,14 @@ public class Helper {
         telemetry.update();
     }
 
+    /**
+     * Add current motor direction to telemetry
+     * @param telemetry The telemetry to add the data to
+     * @param direction The direction of the motor
+     */
     public static void ReportCurrentMotorDirection(Telemetry telemetry, int direction) {
         telemetry.addData("Current motor direction", direction == 1 ? "Forward" : "Backward");
     }
-
 
     /**
      * Sets light on gamepad and rumbles
@@ -120,11 +124,25 @@ public class Helper {
         gp.setLedColor(col.red, col.green, col.blue, Gamepad.LED_DURATION_CONTINUOUS);
     }
 
+    /**
+     * Sets light on gamepad and optionally rumbles
+     * @param gp Gamepad to modify colour
+     * @param col Colour to change gamepad to
+     * @param rumble Option to rumble or not
+     */
     public static void SetGamepadLight(Gamepad gp, GamepadColour col, boolean rumble) {
         if(rumble) gp.rumble(200);
         gp.setLedColor(col.red, col.green, col.blue, Gamepad.LED_DURATION_CONTINUOUS);
     }
 
+    /**
+     * Sets light on gamepad and optionally rumbles
+     * @param gamepad Gamepad to modify colour
+     * @param red Red component of colour to change to
+     * @param green Green component of colour to change to
+     * @param blue Blue component of colour to change to
+     * @param rumble Option to rumble or not
+     */
     public static void SetGamepadLight(Gamepad gamepad, float red, float green, float blue, boolean rumble) {
         if(rumble) gamepad.rumble(200);
         gamepad.setLedColor((double)red, (double)green, (double)blue, Gamepad.LED_DURATION_CONTINUOUS);
@@ -138,15 +156,4 @@ public class Helper {
     public static boolean[] CopyButtonsFromGamepad(Gamepad gp) {
         return new boolean[] {gp.a, gp.b, gp.x, gp.y};
     }
-
-    public static int RainbowLeds(Gamepad gamepad, int i) {    
-        if(i >= rainbows.length) {
-            i = 0;
-        }
-        SetGamepadLight(gamepad, rainbows[i][0], rainbows[i][1], rainbows[i][2], false);
-        i++;
-        return i;
-    }
-
-    public static float[][] rainbows;
 }
