@@ -1,5 +1,10 @@
 ## Requirements
 
+leftEncoderPose = new Pose(2.5, 4.25, 0);
+rightEncoderPose = new Pose(2.5, -4.25, 0);
+strafeEncoderPose = new Pose(4.5, 0, Math.toRadians(90));
+
+
 Download android studio 2021.2 or later.
 
 ## Downloading the Project
