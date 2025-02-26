@@ -9,10 +9,10 @@ public class TelemetryHelper {
      * @param telemetry Telemetry object from OpMode for logging
      */
     public static void ReportDriveMotorStatus(HardwareMap hardwareMap, Telemetry telemetry) {
-//        telemetry.addData("Front Right Motor", hardwareMap.FrontRightMotor == null ? "Fault" : "Operational");
-//        telemetry.addData("Front Left Motor", hardwareMap.FrontLeftMotor == null ? "Fault" : "Operational");
-//        telemetry.addData("Back Right Motor", hardwareMap.BackRightMotor == null ? "Fault" : "Operational");
-//        telemetry.addData("Back Left Motor", hardwareMap.BackLeftMotor == null ? "Fault" : "Operational");
+        telemetry.addData("Front Right Motor", hardwareMap.FrontRightMotor == null ? "Fault" : "Operational");
+        telemetry.addData("Front Left Motor", hardwareMap.FrontLeftMotor == null ? "Fault" : "Operational");
+        telemetry.addData("Back Right Motor", hardwareMap.BackRightMotor == null ? "Fault" : "Operational");
+        telemetry.addData("Back Left Motor", hardwareMap.BackLeftMotor == null ? "Fault" : "Operational");
         telemetry.update();
     }
 
@@ -22,10 +22,10 @@ public class TelemetryHelper {
      * @param telemetry Telemetry object from OpMode for logging
      */
     public static void ReportAllMotorSpeed(HardwareMap hardwareMap, Telemetry telemetry) {
-//        telemetry.addData("Front Right Motor Power", hardwareMap.FrontRightMotor.getPower());
-//        telemetry.addData("Front Left Motor Power", hardwareMap.FrontLeftMotor.getPower());
-//        telemetry.addData("Back Right Motor Power", hardwareMap.BackRightMotor.getPower());
-//        telemetry.addData("Back Left Motor Power", hardwareMap.BackLeftMotor.getPower());
+        telemetry.addData("Front Right Motor Power", hardwareMap.FrontRightMotor.getPower());
+        telemetry.addData("Front Left Motor Power", hardwareMap.FrontLeftMotor.getPower());
+        telemetry.addData("Back Right Motor Power", hardwareMap.BackRightMotor.getPower());
+        telemetry.addData("Back Left Motor Power", hardwareMap.BackLeftMotor.getPower());
         telemetry.update();
     }
 }

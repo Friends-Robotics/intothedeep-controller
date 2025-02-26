@@ -5,6 +5,8 @@ import static org.firstinspires.ftc.teamcode.helpers.TelemetryHelper.ReportDrive
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.HardwareMap;
@@ -14,12 +16,21 @@ import static org.firstinspires.ftc.teamcode.helpers.GamepadEx.Primary;
 import static org.firstinspires.ftc.teamcode.helpers.GamepadEx.Secondary;
 import static org.firstinspires.ftc.teamcode.helpers.GamepadEx.GamepadButton.*;
 
-/**
- * Class for testing of simple Mecanum movement
- *  B -> Claw
- *
- */
-@TeleOp(name="Mecanum Movement", group="Linear OpMode")
+//        -----------------------------------------------------------------------
+//        | Controller Button | Description           | Motor/Servo Affected    |
+//        -----------------------------------------------------------------------
+
+//        -----------------------------------------------------------------------
+//        | Secondary: A      | Extend Claw Forward   | Right Extend Servo      |
+//        -----------------------------------------------------------------------
+//        | Secondary: B      | Open / Close Claw     | Claw Servo              |
+//        -----------------------------------------------------------------------
+//        | Secondary: X      | Claw Rotation         | Right Arm Servo         |
+//        -----------------------------------------------------------------------
+//        | Secondary: Y      | Toggle Precision Mode | N/A                     |
+//        -----------------------------------------------------------------------
+//
+@TeleOp(name="Movement", group="Linear OpMode")
 public class MecanumMovement extends LinearOpMode {
     @Override
     public void runOpMode() {
@@ -29,68 +40,64 @@ public class MecanumMovement extends LinearOpMode {
         HardwareMap teamHardwareMap = new HardwareMap(hardwareMap);
 
         // Init mecanum with a power of 0.5
-//        Mecanum m = Mecanum.Init(
-//                teamHardwareMap.FrontRightMotor,
-//                teamHardwareMap.FrontLeftMotor,
-//                teamHardwareMap.BackRightMotor,
-//                teamHardwareMap.BackLeftMotor,
-//                0.5
-//        );
+        Mecanum m = Mecanum.Init(
+                teamHardwareMap.FrontRightMotor,
+                teamHardwareMap.FrontLeftMotor,
+                teamHardwareMap.BackRightMotor,
+                teamHardwareMap.BackLeftMotor,
+                0.5
+        );
 
         GamepadEx.init_gamepads(gamepad1, gamepad2);
 
-        // Make sure all motors are behaving properly
         ReportDriveMotorStatus(teamHardwareMap, telemetry);
-//
-//        Secondary.bind(B, (gp, __) -> {
-//            teamHardwareMap.ViperBucketServo.setPosition(1);
-//            }, (gp, __) ->  {
-//            teamHardwareMap.ViperBucketServo.setPosition(0);
-//        });
-//
-//        Secondary.bind(A, (gp, __) -> {
-//            teamHardwareMap.RightExtendServo.setPosition(0.3);
-//        }, (gp, __) ->  {
-//            teamHardwareMap.RightExtendServo.setPosition(0.7);
-//        });
-//
+
         telemetry.update();
         waitForStart();
 
         Gamepad prev = new Gamepad();
 
-        if (isStopRequested()) return;
+        Gamepad primary = gamepad1;
+        Gamepad secondary = gamepad1;
 
         double motor_power = 1;
+        boolean precision_mode = false;
+
+        teamHardwareMap.ClawServo.setPosition(0);
+
+        if (isStopRequested()) return;
 
         while (opModeIsActive()) {
-            // Give gamepad to mecanum to move wheels
-//            m.Move(gamepad1);
+            m.Move(primary);
 
-//            Primary.update();
-
-            if(gamepad1.a) {
-                teamHardwareMap.RightExtendServo.setPosition(0.4);
-            }
-            else {
-                teamHardwareMap.RightExtendServo.setPosition(0.6);
+            if(!prev.y && secondary.y) {
+                precision_mode = !precision_mode;
             }
 
-            if(gamepad1.b) {
-                telemetry.addLine("b is pressed");
-                teamHardwareMap.ClawServo.setPosition(0);
-            } else {
-                teamHardwareMap.ClawServo.setPosition(1);
+            if(!prev.a && secondary.a) {
+                if(teamHardwareMap.RightExtendServo.getPosition() == 0.4) {
+                    teamHardwareMap.RightExtendServo.setPosition(0.55);
+                }
+                else teamHardwareMap.RightExtendServo.setPosition(0.4);
             }
 
-            if(gamepad1.x) {
-                teamHardwareMap.RightArmServo.setPosition(0.5);
-                // teamHardwareMap.RightArmServo.setPosition(0.7);
-            } else {
-                teamHardwareMap.RightArmServo.setPosition(0);
+            if(!prev.b && secondary.b) {
+                if(teamHardwareMap.ClawServo.getPosition() == 0) {
+                    teamHardwareMap.ClawServo.setPosition(1);
+                }
+                else teamHardwareMap.ClawServo.setPosition(0);
             }
 
-            if(gamepad1.left_bumper) {
+            // Fix servos for this and then uncomment
+//            if(secondary.x) {
+//                teamHardwareMap.RightArmServo.setPosition(0.5);
+//                // teamHardwareMap.LeftArmServo.setPosition(0);
+//            } else {
+//                teamHardwareMap.RightArmServo.setPosition(1);
+//                // teamHardwareMap.LeftArmServo.setPosition(0);
+//            }
+
+            if(secondary.left_bumper) {
                 teamHardwareMap.RightViperMotor.setPower(-motor_power);
                 teamHardwareMap.LeftViperMotor.setPower(-motor_power);
             } else {
@@ -98,16 +105,18 @@ public class MecanumMovement extends LinearOpMode {
                 teamHardwareMap.LeftViperMotor.setPower(0);
             }
 
-            if(gamepad1.right_bumper) {
+            if(secondary.right_bumper) {
                 teamHardwareMap.RightViperMotor.setPower(motor_power);
                 teamHardwareMap.LeftViperMotor.setPower(motor_power);
+
             } else {
                 teamHardwareMap.RightViperMotor.setPower(0);
                 teamHardwareMap.LeftViperMotor.setPower(0);
             }
 
             ReportAllMotorSpeed(teamHardwareMap, telemetry);
-            prev.copy(gamepad1);
+            telemetry.addData("Precision Mode", precision_mode);
+            prev.copy(secondary);
         }
     }
 }
