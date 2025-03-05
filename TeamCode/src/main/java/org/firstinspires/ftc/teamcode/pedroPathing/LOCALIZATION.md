@@ -117,9 +117,11 @@ that applies to you and follow the directions there.
   variable names correspond to which tracking wheel should be connected.
 * Then, reverse the direction of any encoders so that the forward encoders tick up when the robot
   is moving forward and the strafe encoder ticks up when the robot moves right.
+
+
 * First, start with the `Turn Localizer Tuner`. You'll want to position your robot to be facing
   in a direction you can easily find again, like lining up an edge of the robot against a field tile edge.
-  By default, you should spin the robot for one rotation going counterclockwise. Once you've spun
+  By default, you should spin the robot for one rotation going ***counterclockwise***. Once you've spun
   exactly that one rotation, or whatever you set that value to, then the turn multiplier will be shown
   as the second number shown. The first number is how far the robot thinks you've spun, and the second
   number is the multiplier you need to have to scale your current readings to your goal of one rotation,

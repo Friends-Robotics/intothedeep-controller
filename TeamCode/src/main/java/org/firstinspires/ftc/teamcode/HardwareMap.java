@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.pedroPathing.localization.Encoder;
+
 /**
  * Class to provide a helpful abstraction layer for accessing the HardwareMap
  */
@@ -48,20 +50,20 @@ public class HardwareMap {
     public DcMotorSimple BackRightMotor;
     public DcMotorSimple BackLeftMotor;
 
-    public DcMotorEx RightOdometerMotor;
-    public DcMotorEx LeftOdometerMotor;
-    public DcMotorEx CentreOdometerMotor;
+    public DcMotorEx RightOdometer;
+    public DcMotorEx LeftOdometer;
+    public DcMotorEx CenterOdometer;
 
-    public DcMotorEx RightViperMotor;
-    public DcMotorEx LeftViperMotor;
+    public DcMotorSimple RightViperMotor;
+    public DcMotorSimple LeftViperMotor;
 
-    public Servo RightExtendServo;
+//    public Servo RightExtendServo;
     // public Servo LeftExtendServo;
 
-    public Servo ViperBucketServo;
-    public Servo RightArmServo;
-    public Servo LeftArmServo;
-    public Servo ClawServo;
+//    public Servo ViperBucketServo;
+//    public Servo RightArmServo;
+//    public Servo LeftArmServo;
+//    public Servo ClawServo;
 
     public HardwareMap(com.qualcomm.robotcore.hardware.HardwareMap hardwaremap) {
 
@@ -74,27 +76,27 @@ public class HardwareMap {
         BackLeftMotor = hardwaremap.get(DcMotorSimple.class, "BLW");
         BackLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-//        LeftOdometerMotor = hardwaremap.get(DcMotorEx.class, "LO");
-//        LeftOdometerMotor.setDirection((DcMotorSimple.Direction.REVERSE));
-//        RightOdometerMotor = hardwaremap.get(DcMotorEx.class, "RO");
-//        RightOdometerMotor.setDirection((DcMotorSimple.Direction.REVERSE));
-//        CentreOdometerMotor = hardwaremap.get(DcMotorEx.class, "CO");
-//        CentreOdometerMotor.setDirection((DcMotorSimple.Direction.REVERSE));
-//
-        RightViperMotor = hardwaremap.get(DcMotorEx.class, "RVM");
+        LeftOdometer= hardwaremap.get(DcMotorEx.class, "FLW");
+        LeftOdometer.setDirection(DcMotorSimple.Direction.REVERSE);
+        RightOdometer= hardwaremap.get(DcMotorEx.class, "BRW");
+        RightOdometer.setDirection(DcMotorEx.Direction.FORWARD);
+        CenterOdometer= hardwaremap.get(DcMotorEx.class, "BLW");
+        CenterOdometer.setDirection(DcMotorEx.Direction.FORWARD);
+
+        RightViperMotor = hardwaremap.get(DcMotorSimple.class, "RVM");
         RightViperMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        RightViperMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        // RightViperMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        LeftViperMotor = hardwaremap.get(DcMotorEx.class, "LVM");
+        LeftViperMotor = hardwaremap.get(DcMotorSimple.class, "LVM");
         LeftViperMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        LeftViperMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        RightExtendServo = hardwaremap.get(Servo.class, "RES");
-        // LeftExtendServo = hardwaremap.get(Servo.class, "LES");
-
-        ViperBucketServo = hardwaremap.get(Servo.class, "VBS");
-        RightArmServo = hardwaremap.get(Servo.class, "RAS");
-        LeftArmServo = hardwaremap.get(Servo.class, "LAS");
-        ClawServo = hardwaremap.get(Servo.class, "CLS");
+        // LeftViperMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//
+//        RightExtendServo = hardwaremap.get(Servo.class, "RES");
+//        // LeftExtendServo = hardwaremap.get(Servo.class, "LES");
+//
+//        ViperBucketServo = hardwaremap.get(Servo.class, "VBS");
+//        RightArmServo = hardwaremap.get(Servo.class, "RAS");
+//        LeftArmServo = hardwaremap.get(Servo.class, "LAS");
+//        ClawServo = hardwaremap.get(Servo.class, "CLS");
     }
 }

@@ -19,7 +19,7 @@ import static org.firstinspires.ftc.teamcode.helpers.GamepadEx.GamepadButton.*;
 //        -----------------------------------------------------------------------
 //        | Controller Button | Description           | Motor/Servo Affected    |
 //        -----------------------------------------------------------------------
-
+//
 //        -----------------------------------------------------------------------
 //        | Secondary: A      | Extend Claw Forward   | Right Extend Servo      |
 //        -----------------------------------------------------------------------
@@ -63,54 +63,88 @@ public class MecanumMovement extends LinearOpMode {
         double motor_power = 1;
         boolean precision_mode = false;
 
-        teamHardwareMap.ClawServo.setPosition(0);
+//        teamHardwareMap.RightArmServo.scaleRange(0, 1);
+//        teamHardwareMap.LeftArmServo.scaleRange(0, 1);
+//
+//        teamHardwareMap.ClawServo.setPosition(0);
 
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
+            telemetry.addData("Centre Odometer", teamHardwareMap.CenterOdometer.getVelocity());
+            telemetry.addData("Left Odometer", teamHardwareMap.LeftOdometer.getVelocity());
+            telemetry.addData("Right Odometer", teamHardwareMap.RightOdometer.getVelocity());
+
             m.Move(primary);
 
             if(!prev.y && secondary.y) {
                 precision_mode = !precision_mode;
             }
+//
+//            if(secondary.a) {
+//                teamHardwareMap.RightExtendServo.setPosition(0.35);
+//            } else {
+//                teamHardwareMap.RightExtendServo.setPosition(0.7);
+//            }
+//
+//            if(!prev.a && secondary.a) {
+//                if(teamHardwareMap.RightExtendServo.getPosition() == 0.4) {
+//                    teamHardwareMap.RightExtendServo.setPosition(0.55);
+//                }
+//                else teamHardwareMap.RightExtendServo.setPosition(0.4);
+//            }
 
-            if(!prev.a && secondary.a) {
-                if(teamHardwareMap.RightExtendServo.getPosition() == 0.4) {
-                    teamHardwareMap.RightExtendServo.setPosition(0.55);
-                }
-                else teamHardwareMap.RightExtendServo.setPosition(0.4);
-            }
-
-            if(!prev.b && secondary.b) {
-                if(teamHardwareMap.ClawServo.getPosition() == 0) {
-                    teamHardwareMap.ClawServo.setPosition(1);
-                }
-                else teamHardwareMap.ClawServo.setPosition(0);
-            }
-
-            // Fix servos for this and then uncomment
+//            if(!prev.b && secondary.b) {
+//                if(teamHardwareMap.ClawServo.getPosition() == 0) {
+//                    teamHardwareMap.ClawServo.setPosition(1);
+//                }
+//                else teamHardwareMap.ClawServo.setPosition(0);
+//            }
+//
+//            // Fix servos for this and then uncomment
 //            if(secondary.x) {
-//                teamHardwareMap.RightArmServo.setPosition(0.5);
+//                teamHardwareMap.RightArmServo.setPosition(0);
 //                // teamHardwareMap.LeftArmServo.setPosition(0);
 //            } else {
 //                teamHardwareMap.RightArmServo.setPosition(1);
 //                // teamHardwareMap.LeftArmServo.setPosition(0);
 //            }
-
-            if(secondary.left_bumper) {
-                teamHardwareMap.RightViperMotor.setPower(-motor_power);
-                teamHardwareMap.LeftViperMotor.setPower(-motor_power);
-            } else {
-                teamHardwareMap.RightViperMotor.setPower(0);
-                teamHardwareMap.LeftViperMotor.setPower(0);
-            }
-
+//
+//            // Fix servos for this and then uncomment
+//            if(secondary.b) {
+//                teamHardwareMap.LeftArmServo.setPosition(0);
+//                // teamHardwareMap.LeftArmServo.setPosition(0);
+//            } else {
+//                teamHardwareMap.LeftArmServo.setPosition(1);
+//                // teamHardwareMap.LeftArmServo.setPosition(0);
+//            }
+//
+//
+//            if(secondary.left_bumper) {
+//                teamHardwareMap.RightViperMotor.setPower(-motor_power);
+//                teamHardwareMap.LeftViperMotor.setPower(-motor_power);
+//            } else {
+//                teamHardwareMap.RightViperMotor.setPower(0);
+//                teamHardwareMap.LeftViperMotor.setPower(0);
+//            }
+//
             if(secondary.right_bumper) {
                 teamHardwareMap.RightViperMotor.setPower(motor_power);
-                teamHardwareMap.LeftViperMotor.setPower(motor_power);
-
-            } else {
+            }
+            else if(secondary.right_trigger > 0) {
+                teamHardwareMap.RightViperMotor.setPower(-motor_power);
+            }
+            else {
                 teamHardwareMap.RightViperMotor.setPower(0);
+            }
+
+            if(secondary.left_bumper) {
+                teamHardwareMap.LeftViperMotor.setPower(motor_power);
+            }
+            else if(secondary.left_trigger > 0) {
+                teamHardwareMap.LeftViperMotor.setPower(-motor_power);
+            }
+            else {
                 teamHardwareMap.LeftViperMotor.setPower(0);
             }
 

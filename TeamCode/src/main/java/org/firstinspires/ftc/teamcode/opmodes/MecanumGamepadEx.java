@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import static org.firstinspires.ftc.teamcode.helpers.TelemetryHelper.ReportAllMotorSpeed;
 import static org.firstinspires.ftc.teamcode.helpers.TelemetryHelper.ReportDriveMotorStatus;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -17,6 +18,7 @@ import org.firstinspires.ftc.teamcode.helpers.Mecanum;
 /**
  * Class for testing of simple Mecanum movement
  */
+@Disabled
 @TeleOp(name="Mecanum GamepadEx Movement", group="Linear OpMode")
 public class MecanumGamepadEx extends LinearOpMode {
     @Override
