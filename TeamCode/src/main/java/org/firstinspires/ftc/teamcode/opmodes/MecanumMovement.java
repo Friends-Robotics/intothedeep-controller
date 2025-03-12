@@ -61,7 +61,6 @@ public class MecanumMovement extends LinearOpMode {
         Gamepad secondary = gamepad1;
 
         double motor_power = 1;
-        boolean precision_mode = false;
 
 //        teamHardwareMap.RightArmServo.scaleRange(0, 1);
 //        teamHardwareMap.LeftArmServo.scaleRange(0, 1);
@@ -71,28 +70,17 @@ public class MecanumMovement extends LinearOpMode {
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
-            telemetry.addData("Centre Odometer", teamHardwareMap.CenterOdometer.getVelocity());
-            telemetry.addData("Left Odometer", teamHardwareMap.LeftOdometer.getVelocity());
-            telemetry.addData("Right Odometer", teamHardwareMap.RightOdometer.getVelocity());
+//            telemetry.addData("Centre Odometer", teamHardwareMap.CenterOdometer.getVelocity());
+//            telemetry.addData("Left Odometer", teamHardwareMap.LeftOdometer.getVelocity());
+//            telemetry.addData("Right Odometer", teamHardwareMap.RightOdometer.getVelocity());
+
+            telemetry.addData("Right Viper Ticks", teamHardwareMap.RightViperMotor.getCurrentPosition());
+            telemetry.addData("Left Viper Ticks", teamHardwareMap.LeftViperMotor.getCurrentPosition());
+
+            telemetry.addData("Right Viper Ticks", teamHardwareMap.RightViperMotor.getVelocity());
+            telemetry.addData("Left Viper Ticks", teamHardwareMap.LeftViperMotor.getVelocity());
 
             m.Move(primary);
-
-            if(!prev.y && secondary.y) {
-                precision_mode = !precision_mode;
-            }
-//
-//            if(secondary.a) {
-//                teamHardwareMap.RightExtendServo.setPosition(0.35);
-//            } else {
-//                teamHardwareMap.RightExtendServo.setPosition(0.7);
-//            }
-//
-//            if(!prev.a && secondary.a) {
-//                if(teamHardwareMap.RightExtendServo.getPosition() == 0.4) {
-//                    teamHardwareMap.RightExtendServo.setPosition(0.55);
-//                }
-//                else teamHardwareMap.RightExtendServo.setPosition(0.4);
-//            }
 
 //            if(!prev.b && secondary.b) {
 //                if(teamHardwareMap.ClawServo.getPosition() == 0) {
@@ -149,7 +137,7 @@ public class MecanumMovement extends LinearOpMode {
             }
 
             ReportAllMotorSpeed(teamHardwareMap, telemetry);
-            telemetry.addData("Precision Mode", precision_mode);
+            telemetry.update();
             prev.copy(secondary);
         }
     }

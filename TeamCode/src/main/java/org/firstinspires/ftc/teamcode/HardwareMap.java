@@ -54,16 +54,16 @@ public class HardwareMap {
     public DcMotorEx LeftOdometer;
     public DcMotorEx CenterOdometer;
 
-    public DcMotorSimple RightViperMotor;
-    public DcMotorSimple LeftViperMotor;
+    public DcMotorEx RightViperMotor;
+    public DcMotorEx LeftViperMotor;
 
-//    public Servo RightExtendServo;
-    // public Servo LeftExtendServo;
+    public Servo RightExtendServo;
+    public Servo LeftExtendServo;
 
-//    public Servo ViperBucketServo;
-//    public Servo RightArmServo;
-//    public Servo LeftArmServo;
-//    public Servo ClawServo;
+    public Servo ViperBucketServo;
+    public Servo RightArmServo;
+    public Servo LeftArmServo;
+    public Servo ClawServo;
 
     public HardwareMap(com.qualcomm.robotcore.hardware.HardwareMap hardwaremap) {
 
@@ -76,23 +76,26 @@ public class HardwareMap {
         BackLeftMotor = hardwaremap.get(DcMotorSimple.class, "BLW");
         BackLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        LeftOdometer= hardwaremap.get(DcMotorEx.class, "FLW");
-        LeftOdometer.setDirection(DcMotorSimple.Direction.REVERSE);
-        RightOdometer= hardwaremap.get(DcMotorEx.class, "BRW");
-        RightOdometer.setDirection(DcMotorEx.Direction.FORWARD);
-        CenterOdometer= hardwaremap.get(DcMotorEx.class, "BLW");
-        CenterOdometer.setDirection(DcMotorEx.Direction.FORWARD);
-
-        RightViperMotor = hardwaremap.get(DcMotorSimple.class, "RVM");
+//        LeftOdometer = hardwaremap.get(DcMotorEx.class, "FLW");
+//        LeftOdometer.setDirection(DcMotorSimple.Direction.REVERSE);
+//        RightOdometer = hardwaremap.get(DcMotorEx.class, "BRW");
+//        RightOdometer.setDirection(DcMotorEx.Direction.FORWARD);
+//        CenterOdometer = hardwaremap.get(DcMotorEx.class, "BLW");
+//        CenterOdometer.setDirection(DcMotorEx.Direction.FORWARD);
+//
+        RightViperMotor = hardwaremap.get(DcMotorEx.class, "RVM");
         RightViperMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        RightViperMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         // RightViperMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        LeftViperMotor = hardwaremap.get(DcMotorSimple.class, "LVM");
+        LeftViperMotor = hardwaremap.get(DcMotorEx.class, "LVM");
         LeftViperMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        LeftViperMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         // LeftViperMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//
+
 //        RightExtendServo = hardwaremap.get(Servo.class, "RES");
-//        // LeftExtendServo = hardwaremap.get(Servo.class, "LES");
+//        LeftExtendServo = hardwaremap.get(Servo.class, "LES");
 //
 //        ViperBucketServo = hardwaremap.get(Servo.class, "VBS");
 //        RightArmServo = hardwaremap.get(Servo.class, "RAS");
