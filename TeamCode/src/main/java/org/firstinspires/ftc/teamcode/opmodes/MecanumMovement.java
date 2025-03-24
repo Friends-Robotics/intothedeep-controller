@@ -12,23 +12,24 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.HardwareMap;
 import org.firstinspires.ftc.teamcode.helpers.GamepadEx;
 import org.firstinspires.ftc.teamcode.helpers.Mecanum;
+import org.firstinspires.ftc.teamcode.helpers.Arm;
 import static org.firstinspires.ftc.teamcode.helpers.GamepadEx.Primary;
 import static org.firstinspires.ftc.teamcode.helpers.GamepadEx.Secondary;
 import static org.firstinspires.ftc.teamcode.helpers.GamepadEx.GamepadButton.*;
 
-//        -----------------------------------------------------------------------
-//        | Controller Button | Description           | Motor/Servo Affected    |
-//        -----------------------------------------------------------------------
+//        -------------------------------------------------------------------------------
+//        | Controller Button     | Description           | Motor/Servo Affected        |
+//        -------------------------------------------------------------------------------
 //
-//        -----------------------------------------------------------------------
-//        | Secondary: A      | Extend Claw Forward   | Right Extend Servo      |
-//        -----------------------------------------------------------------------
-//        | Secondary: B      | Open / Close Claw     | Claw Servo              |
-//        -----------------------------------------------------------------------
-//        | Secondary: X      | Claw Rotation         | Right Arm Servo         |
-//        -----------------------------------------------------------------------
-//        | Secondary: Y      | Toggle Precision Mode | N/A                     |
-//        -----------------------------------------------------------------------
+//        -------------------------------------------------------------------------------
+//        | Secondary: A/Cross    | Extend Claw Forward   | Right and Left Extend Servo |
+//        -------------------------------------------------------------------------------
+//        | Secondary: B/Circle   | Open / Close Claw     | Claw Servo                  |
+//        -------------------------------------------------------------------------------
+//        | Secondary: X/Square   | Claw Rotation         | Right Arm Servo             |
+//        -------------------------------------------------------------------------------
+//        | Secondary: Y/Triangle | Toggle Precision Mode | N/A                         |
+//        -------------------------------------------------------------------------------
 //
 @TeleOp(name="Movement", group="Linear OpMode")
 public class MecanumMovement extends LinearOpMode {
@@ -48,24 +49,25 @@ public class MecanumMovement extends LinearOpMode {
                 0.5
         );
 
-        GamepadEx.init_gamepads(gamepad1, gamepad2);
+        Arm arm = new Arm(
+                teamHardwareMap.RightExtendServo,
+                teamHardwareMap.LeftExtendServo,
+                teamHardwareMap.RightArmServo,
+                teamHardwareMap.LeftArmServo,
+                teamHardwareMap.ClawServo
+        );
 
         ReportDriveMotorStatus(teamHardwareMap, telemetry);
 
         telemetry.update();
         waitForStart();
 
-        Gamepad prev = new Gamepad();
-
-        Gamepad primary = gamepad1;
-        Gamepad secondary = gamepad1;
+        Gamepad currentGamepad1 = new Gamepad();
+        Gamepad currentGamepad2 = new Gamepad();
+        Gamepad previousGamepad1 = new Gamepad();
+        Gamepad previousGamepad2 = new Gamepad();
 
         double motor_power = 1;
-
-//        teamHardwareMap.RightArmServo.scaleRange(0, 1);
-//        teamHardwareMap.LeftArmServo.scaleRange(0, 1);
-//
-//        teamHardwareMap.ClawServo.setPosition(0);
 
         if (isStopRequested()) return;
 
@@ -80,65 +82,51 @@ public class MecanumMovement extends LinearOpMode {
             telemetry.addData("Right Viper Ticks", teamHardwareMap.RightViperMotor.getVelocity());
             telemetry.addData("Left Viper Ticks", teamHardwareMap.LeftViperMotor.getVelocity());
 
-            m.Move(primary);
+            m.Move(gamepad1);
 
-//            if(!prev.b && secondary.b) {
-//                if(teamHardwareMap.ClawServo.getPosition() == 0) {
-//                    teamHardwareMap.ClawServo.setPosition(1);
-//                }
-//                else teamHardwareMap.ClawServo.setPosition(0);
-//            }
-//
-//            // Fix servos for this and then uncomment
-//            if(secondary.x) {
-//                teamHardwareMap.RightArmServo.setPosition(0);
-//                // teamHardwareMap.LeftArmServo.setPosition(0);
-//            } else {
-//                teamHardwareMap.RightArmServo.setPosition(1);
-//                // teamHardwareMap.LeftArmServo.setPosition(0);
-//            }
-//
-//            // Fix servos for this and then uncomment
-//            if(secondary.b) {
-//                teamHardwareMap.LeftArmServo.setPosition(0);
-//                // teamHardwareMap.LeftArmServo.setPosition(0);
-//            } else {
-//                teamHardwareMap.LeftArmServo.setPosition(1);
-//                // teamHardwareMap.LeftArmServo.setPosition(0);
-//            }
-//
-//
-//            if(secondary.left_bumper) {
-//                teamHardwareMap.RightViperMotor.setPower(-motor_power);
-//                teamHardwareMap.LeftViperMotor.setPower(-motor_power);
-//            } else {
-//                teamHardwareMap.RightViperMotor.setPower(0);
-//                teamHardwareMap.LeftViperMotor.setPower(0);
-//            }
-//
-            if(secondary.right_bumper) {
+            previousGamepad1.copy(currentGamepad1);
+            previousGamepad2.copy(currentGamepad2);
+
+            currentGamepad1.copy(gamepad1);
+            currentGamepad2.copy(gamepad2);
+
+
+
+            if(currentGamepad2.right_bumper) {
                 teamHardwareMap.RightViperMotor.setPower(motor_power);
             }
-            else if(secondary.right_trigger > 0) {
+            else if(currentGamepad2.right_trigger > 0) {
                 teamHardwareMap.RightViperMotor.setPower(-motor_power);
             }
             else {
                 teamHardwareMap.RightViperMotor.setPower(0);
             }
 
-            if(secondary.left_bumper) {
+            if(currentGamepad2.left_bumper) {
                 teamHardwareMap.LeftViperMotor.setPower(motor_power);
             }
-            else if(secondary.left_trigger > 0) {
+            else if(currentGamepad2.left_trigger > 0) {
                 teamHardwareMap.LeftViperMotor.setPower(-motor_power);
             }
             else {
                 teamHardwareMap.LeftViperMotor.setPower(0);
             }
 
+
+            if(currentGamepad2.cross && !previousGamepad2.cross) {
+                arm.ToggleExtension();
+            }
+            if(currentGamepad2.square && !previousGamepad2.square)
+            {
+                arm.Claw.ToggleRotation();
+            }
+            if(currentGamepad2.circle && !previousGamepad2.circle)
+            {
+                arm.Claw.ToggleClaw();
+            }
+
             ReportAllMotorSpeed(teamHardwareMap, telemetry);
             telemetry.update();
-            prev.copy(secondary);
         }
     }
 }

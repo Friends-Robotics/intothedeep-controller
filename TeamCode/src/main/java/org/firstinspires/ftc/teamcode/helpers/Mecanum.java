@@ -49,8 +49,8 @@ public class Mecanum {
         }
 
         // Y values need to be inverted
-        double y = gp.left_stick_y;
-        double x = -gp.left_stick_x;
+        double y = -gp.left_stick_y;
+        double x = gp.left_stick_x;
         double rx = gp.right_stick_x;
 
         // Denominator is the largest motor power (absolute value) or 1

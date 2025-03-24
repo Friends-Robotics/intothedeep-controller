@@ -68,13 +68,13 @@ public class HardwareMap {
     public HardwareMap(com.qualcomm.robotcore.hardware.HardwareMap hardwaremap) {
 
         FrontRightMotor = hardwaremap.get(DcMotorSimple.class, "FRW");
-        FrontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        FrontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         FrontLeftMotor = hardwaremap.get(DcMotorSimple.class, "FLW");
-        FrontLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        FrontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         BackRightMotor = hardwaremap.get(DcMotorSimple.class, "BRW");
-        BackRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        BackRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         BackLeftMotor = hardwaremap.get(DcMotorSimple.class, "BLW");
-        BackLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        BackLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
 //        LeftOdometer = hardwaremap.get(DcMotorEx.class, "FLW");
 //        LeftOdometer.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -94,12 +94,14 @@ public class HardwareMap {
         LeftViperMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         // LeftViperMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-//        RightExtendServo = hardwaremap.get(Servo.class, "RES");
-//        LeftExtendServo = hardwaremap.get(Servo.class, "LES");
+        RightExtendServo = hardwaremap.get(Servo.class, "RES");
+        LeftExtendServo = hardwaremap.get(Servo.class, "LES");
+        LeftExtendServo.setDirection(Servo.Direction.REVERSE);
 //
 //        ViperBucketServo = hardwaremap.get(Servo.class, "VBS");
-//        RightArmServo = hardwaremap.get(Servo.class, "RAS");
-//        LeftArmServo = hardwaremap.get(Servo.class, "LAS");
-//        ClawServo = hardwaremap.get(Servo.class, "CLS");
+        RightArmServo = hardwaremap.get(Servo.class, "RAS");
+        LeftArmServo = hardwaremap.get(Servo.class, "LAS");
+        ClawServo = hardwaremap.get(Servo.class, "CLS");
+        RightArmServo.setDirection(Servo.Direction.REVERSE);
     }
 }
