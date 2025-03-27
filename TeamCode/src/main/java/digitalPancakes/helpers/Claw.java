@@ -2,41 +2,60 @@ package digitalPancakes.helpers;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Claw {
-    private Servo RightArmServo;
-    private Servo LeftArmServo;
-    private Servo ClawServo;
+
+    private final Servo rightArmServo;
+    private final Servo leftArmServo;
+    private final Servo clawServo;
     private boolean isDown;
     private boolean isOpen;
-    public Claw(Servo RAS, Servo LAS, Servo CLS){
-        RightArmServo = RAS;
-        LeftArmServo = LAS;
-        ClawServo = CLS;
+
+    public Claw(Servo right_arm_servo, Servo left_arm_servo, Servo claw_servo) {
+        rightArmServo = right_arm_servo;
+        leftArmServo = left_arm_servo;
+        clawServo = claw_servo;
         isDown = false;
         isOpen = false;
-        RightArmServo.setPosition(0);
-        LeftArmServo.setPosition(0);
-        ClawServo.setPosition(0.9);
+        rightArmServo.setPosition(0);
+        leftArmServo.setPosition(0);
+        clawServo.setPosition(0.9);
     }
 
-    public void ToggleRotation(){
-        if(!isDown){
-            RightArmServo.setPosition(1);
-            LeftArmServo.setPosition(1);
-            isDown = true;
-        }else{
-            RightArmServo.setPosition(0);
-            LeftArmServo.setPosition(0);
-            isDown = false;
+    public void toggleRotation() {
+        if(!isDown) {
+            rightArmServo.setPosition(1);
+            leftArmServo.setPosition(1);
+        } else {
+            rightArmServo.setPosition(0);
+            leftArmServo.setPosition(0);
         }
+        isDown = !isDown;
     }
 
-    public void ToggleClaw(){
-        if(!isOpen){
-            ClawServo.setPosition(0.9);
+    public void armDown() {
+        rightArmServo.setPosition(0);
+        leftArmServo.setPosition(0);
+    }
+
+    public void armUp() {
+        rightArmServo.setPosition(1);
+        leftArmServo.setPosition(1);
+    }
+
+    public void toggleClaw() {
+        if(!isOpen) {
+            clawServo.setPosition(0.9);
             isOpen = true;
-        }else{
-            ClawServo.setPosition(0);
+        } else {
+            clawServo.setPosition(0.5);
             isOpen = false;
         }
+    }
+
+    public void clawClose() {
+        clawServo.setPosition(0.5);
+    }
+
+    public void clawOpen() {
+        clawServo.setPosition(0.8);
     }
 }

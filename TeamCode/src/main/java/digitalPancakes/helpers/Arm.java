@@ -4,35 +4,43 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class Arm {
 
-    private final Servo RightExtendServo;
-    private final Servo LeftExtendServo;
-    private final Claw Claw;
+    private final Servo rightExtendServo;
+    private final Servo leftExtendServo;
+    private final Claw claw;
     private boolean isExtended;
 
-    public Arm(Servo rightExtensionServo, Servo leftExtensionServo,
-               Servo rightArmServo, Servo leftArmServo, Servo clawServo) {
-        RightExtendServo = rightExtensionServo;
-        LeftExtendServo = leftExtensionServo;
-        Claw = new Claw(rightArmServo,leftArmServo,clawServo);
+    public Arm(Servo right_extension_servo, Servo left_extension_servo,
+               Servo right_arm_servo, Servo left_arm_servo, Servo claw_servo) {
+        rightExtendServo = right_extension_servo;
+        leftExtendServo = left_extension_servo;
+        claw = new Claw(right_arm_servo,left_arm_servo,claw_servo);
         isExtended = false;
-        RightExtendServo.setPosition(0);
-        LeftExtendServo.setPosition(0);
+        rightExtendServo.setPosition(0);
+        leftExtendServo.setPosition(0);
     }
 
-    public void ToggleExtension() {
+    public void toggleExtension(float percentage) {
         if(!isExtended) {
-            RightExtendServo.setPosition(0.4);
-            LeftExtendServo.setPosition(0.4);
-            isExtended = true;
+            rightExtendServo.setPosition(0.4 * percentage);
+            leftExtendServo.setPosition(0.4 * percentage);
+        } else {
+            rightExtendServo.setPosition(0);
+            leftExtendServo.setPosition(0);
         }
-        else {
-            RightExtendServo.setPosition(0);
-            LeftExtendServo.setPosition(0);
-            isExtended = false;
-        }
+        isExtended = !isExtended;
+    }
+
+    public void extensionOut() {
+        rightExtendServo.setPosition(1);
+        leftExtendServo.setPosition(1);
+    }
+
+    public void extensionIn() {
+        rightExtendServo.setPosition(0.4);
+        leftExtendServo.setPosition(0.4);
     }
 
     public Claw getClaw() {
-        return Claw;
+        return claw;
     }
 }
