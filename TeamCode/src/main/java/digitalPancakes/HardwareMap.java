@@ -96,8 +96,8 @@ public class HardwareMap {
         RightExtendServo = hardwaremap.get(Servo.class, "RES");
         LeftExtendServo = hardwaremap.get(Servo.class, "LES");
         LeftExtendServo.setDirection(Servo.Direction.REVERSE);
-//
-//        ViperBucketServo = hardwaremap.get(Servo.class, "VBS");
+
+        ViperBucketServo = hardwaremap.get(Servo.class, "VBS");
         RightArmServo = hardwaremap.get(Servo.class, "RAS");
         LeftArmServo = hardwaremap.get(Servo.class, "LAS");
         ClawServo = hardwaremap.get(Servo.class, "CLS");

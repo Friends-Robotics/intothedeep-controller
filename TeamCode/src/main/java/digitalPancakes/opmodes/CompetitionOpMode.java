@@ -6,9 +6,11 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import digitalPancakes.HardwareMap;
-import digitalPancakes.helpers.ArmExtension;
+import digitalPancakes.helpers.Claw;
+import digitalPancakes.helpers.ViperExtension;
 import digitalPancakes.helpers.Mecanum;
-import digitalPancakes.helpers.Arm;
+import digitalPancakes.helpers.HorizontalExtension;
+import digitalPancakes.helpers.Wrist;
 
 //        -------------------------------------------------------------------------------
 //        | Controller Button     | Description           | Motor/Servo Affected        |
@@ -43,8 +45,7 @@ public class CompetitionOpMode extends LinearOpMode {
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
-
-        // Create hardware map
+       // Create hardware map
         HardwareMap teamHardwareMap = new HardwareMap(hardwareMap);
 
         // Create mecanum drive
@@ -57,19 +58,21 @@ public class CompetitionOpMode extends LinearOpMode {
         );
 
         // Create arm controller
-        Arm arm = new Arm(
+        HorizontalExtension arm = new HorizontalExtension(
                 teamHardwareMap.RightExtendServo,
-                teamHardwareMap.LeftExtendServo,
-                teamHardwareMap.RightArmServo,
-                teamHardwareMap.LeftArmServo,
-                teamHardwareMap.ClawServo
+                teamHardwareMap.LeftExtendServo
         );
 
+        Wrist wrist = new Wrist(teamHardwareMap.RightArmServo, teamHardwareMap.LeftArmServo);
+
         // Create viper slide controller
-        ArmExtension extension = new ArmExtension(
+        ViperExtension extension = new ViperExtension(
                 teamHardwareMap.RightViperMotor,
-                teamHardwareMap.LeftViperMotor
+                teamHardwareMap.LeftViperMotor,
+                teamHardwareMap.ViperBucketServo
         );
+
+        Claw claw = new Claw(teamHardwareMap.ClawServo);
 
         telemetry.update();
         waitForStart();
@@ -79,32 +82,23 @@ public class CompetitionOpMode extends LinearOpMode {
         Gamepad previousGamepad1 = new Gamepad();
         Gamepad previousGamepad2 = new Gamepad();
 
-        boolean isTargetMax = false;
-
         if (isStopRequested()) return;
-
-        ElapsedTime time = new ElapsedTime();
-        time.reset();
 
         boolean out = false;
 
-        double arm_extend_time = 0.5;
-        double extend_extend_time = 0.5;
-        double claw_extend_time = 0.25;
-        double macro_extend_time = 1;
-
-        double macro_upwards_extend  = 0.5;
-
-        double macro_time = 0.5;
-        double arm_time = 0.5;
-        double extend_time = 0.5;
-        double claw_time = 0.25;
+        double val = 0;
 
         while (opModeIsActive()) {
+            previousGamepad1.copy(currentGamepad1);
+            previousGamepad2.copy(currentGamepad2);
+
             currentGamepad1.copy(gamepad1);
             currentGamepad2.copy(gamepad2);
 
-            telemetry.addData("Is Target Max: ", isTargetMax);
+            // GAMEPAD 1 CONTROLS
+
+            // Move the mecanum wheels
+            m.Move(gamepad1);
 
             // Mecanum Speed
             if(currentGamepad1.cross) {
@@ -115,82 +109,104 @@ public class CompetitionOpMode extends LinearOpMode {
                 gamepad1.setLedColor(0, 255, 0, Gamepad.LED_DURATION_CONTINUOUS);
             }
 
-            // Move the mecanum wheels
-            m.Move(gamepad1);
 
-            // Viper
-            if(currentGamepad2.right_bumper && (time.time() - macro_upwards_extend) > 0.5) {
-                extension.Textend(5550);
-                macro_upwards_extend = time.time();
+
+
+            // GAMEPAD 2 CONTROLS
+
+            // Viper Slide
+            if(currentGamepad2.right_bumper) {
+                extension.Extend();
+            } else if(currentGamepad2.left_bumper) {
+                extension.Dextend();
+            } else {
+                extension.Nextend();
             }
 
-            if(currentGamepad2.left_bumper && (time.time() - macro_upwards_extend) > 0.5) {
-                extension.Textend(0);
-                macro_upwards_extend = time.time();
-            }
-
-            // Viper Slide Encoder Ticks
-            telemetry.addData("Right Viper Slide Encoder Ticks", teamHardwareMap.RightViperMotor.getCurrentPosition());
-            telemetry.addData("Left Viper Slide Encoder Ticks", teamHardwareMap.LeftViperMotor.getCurrentPosition());
-
-            telemetry.addData("Macro Extension Enabled", (time.time() - macro_time) > macro_extend_time);
-            telemetry.addData("Extension Extension Enabled", (time.time() - extend_time) > extend_extend_time);
-            telemetry.addData("Claw Extension Enabled", (time.time() - claw_time) > claw_extend_time);
-
-            // Arm Extension
-            if(currentGamepad2.cross && (time.time() - macro_time) > macro_extend_time) {
-                arm.toggleExtension(1f);
-                arm.getClaw().toggleRotation();
-                if(!out) {
-                    arm.getClaw().clawClose();
+            if(currentGamepad2.cross && !previousGamepad2.cross) {
+                if(arm.IsExtended()) {
+                    arm.extensionIn();
+                    wrist.up();
                 } else {
-                    arm.getClaw().clawOpen();
+                    arm.extensionOut();
+                    wrist.down();
+                    claw.clawOpen();
                 }
-                macro_time = time.time();
-                out = !out;
             }
 
-            // Arm Extension
-            if(currentGamepad2.dpad_down && (time.time() - macro_time) > macro_extend_time) {
-                arm.toggleExtension(0.5f);
-                arm.getClaw().toggleRotation();
-                if(!out) {
-                    arm.getClaw().clawClose();
+            // Opening Bucket
+            if(currentGamepad2.triangle && !previousGamepad2.triangle) {
+                extension.toggleBucket();
+            }
+
+            if(currentGamepad2.square && !previousGamepad2.square) {
+                if(wrist.getDown()) {
+                    wrist.up();
                 } else {
-                    arm.getClaw().clawOpen();
+                    wrist.down();
                 }
-                macro_time = time.time();
-                out = !out;
-            }
-
-            // Arm Extension
-            if(currentGamepad2.dpad_up && (time.time() - macro_time) > macro_extend_time) {
-                arm.toggleExtension(0.25f);
-                arm.getClaw().toggleRotation();
-                if(!out) {
-                    arm.getClaw().clawClose();
-                } else {
-                    arm.getClaw().clawOpen();
-                }
-                macro_time = time.time();
-                out = !out;
-            }
-
-            telemetry.addData("OUT", out);
-
-            // Claw Rotation
-            if(currentGamepad2.square && (time.time() - arm_time) > arm_extend_time) {
-                arm.getClaw().toggleRotation();
-                arm_time = time.time();
             }
 
             // Claw Closing
-            if(currentGamepad2.circle  && (time.time() - claw_time) > claw_extend_time)
+            if(currentGamepad2.circle && !previousGamepad2.circle)
             {
-                arm.getClaw().toggleClaw();
-                claw_time = time.time();
+                if(claw.IsOpen()) {
+                    claw.clawClose();
+                } else {
+                    claw.clawOpen();
+                }
             }
 
+            if(currentGamepad1.triangle && !previousGamepad1.triangle) {
+                // Start macro
+
+                claw.clawOpen();
+                sleep(200);
+                extension.depositBucket();
+                sleep(200);
+
+                arm.setExtension(0.3);
+                sleep(200);
+                wrist.max();
+                claw.setClaw(0.35);
+                sleep(600);
+                claw.clawClose();
+
+                arm.extensionOut();
+                sleep(200);
+
+                wrist.up();
+                sleep(200);
+
+                extension.receiveBucket();
+                sleep(300);
+
+                arm.extensionIn();
+            }
+
+            if(currentGamepad1.square && !previousGamepad1.square) {
+                // Start macro
+                claw.clawOpen();
+                sleep(200);
+
+                arm.setExtension(0.3);
+                sleep(200);
+                wrist.max();
+                claw.setClaw(0.35);
+                sleep(600);
+                claw.clawClose();
+
+                arm.extensionOut();
+                sleep(200);
+
+                wrist.up();
+                sleep(200);
+
+                arm.extensionIn();
+            }
+
+            telemetry.addData("Claw is open", claw.IsOpen());
+            telemetry.addData("Current Rotation Value", val);
             telemetry.addData("left ticks: ", teamHardwareMap.LeftViperMotor.getCurrentPosition());
             telemetry.addData("right ticks: ", teamHardwareMap.RightViperMotor.getCurrentPosition());
             telemetry.update();

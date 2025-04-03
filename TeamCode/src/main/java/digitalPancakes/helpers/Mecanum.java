@@ -48,15 +48,34 @@ public class Mecanum {
             PowerMultiplier = 1;
         }
 
+        double start_power = PowerMultiplier;
+
         // Y values need to be inverted
         double y = -gp.left_stick_y;
         double x = gp.left_stick_x;
         double rx = gp.right_stick_x;
 
         if(gp.right_bumper) {
+            PowerMultiplier = 1;
             rx = 1;
         } else if(gp.left_bumper) {
+            PowerMultiplier = 1;
             rx = -1;
+        }
+
+
+        if(gp.dpad_right) {
+            PowerMultiplier = 0.2;
+            x = 1;
+        } else if(gp.dpad_left) {
+            PowerMultiplier = 0.2;
+            x = -1;
+        } else if(gp.dpad_up) {
+            PowerMultiplier = 0.2;
+            y = 1;
+        } else if(gp.dpad_down) {
+            PowerMultiplier = 0.2;
+            y = -1;
         }
 
         // Denominator is the largest motor power (absolute value) or 1
@@ -72,5 +91,7 @@ public class Mecanum {
         frontLeftMotor.setPower(frontLeftPower * PowerMultiplier);
         backRightMotor.setPower(backRightPower * PowerMultiplier);
         backLeftMotor.setPower(backLeftPower * PowerMultiplier);
+
+        PowerMultiplier = start_power;
     }
 }
